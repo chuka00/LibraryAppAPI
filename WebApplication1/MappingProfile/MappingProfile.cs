@@ -9,6 +9,7 @@ namespace WebApplication1.MappingProfile
         public MappingProfile()
         {
             CreateMap<Book, BookDto>();
+            CreateMap<BookDto, Book>();
             CreateMap<UserForRegistrationDto, User>();
         }
     }
