@@ -9,41 +9,51 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBookServices _bookInterface;
+        private readonly IBookServices _bookService;
 
-        public BookController(IBookServices bookInterface)
+
+        public BookController(IBookServices bookService)
         {
-            _bookInterface = bookInterface;
+            _bookService = bookService;
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Librarian")]
         [HttpGet(Name = "GetBooks")]
         [ProducesResponseType(200)]
         public IActionResult GetBooks()
         {
-            var books = _bookInterface.GetBooks();
+            var books = _bookService.GetBooks();
             return Ok(books);
         }
 
+        [Authorize(Roles = "Librarian")]
         [HttpGet("{id}")]
-        [Authorize]
         [ProducesResponseType(200)]
         public IActionResult GetBook(int id)
         {
-            var book = _bookInterface.GetBookById(id);
+            var book = _bookService.GetBookById(id);
             return Ok(book);
         }
         [HttpPost]
         public async Task<IActionResult> CreateBook(BookDto book)
         {
-            var newBook = await _bookInterface.CreateBook(book);
+            var newBook = await _bookService.CreateBook(book);
             return Ok(newBook);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<BookDto>> UpdateBook(int id, BookDto bookDto)
+        {
+             await _bookService.UpdateBook(id, bookDto);
+            return Ok();
+        }
+       
+
         [HttpDelete]
         public async Task<IActionResult> DeleteBook(int Id)
         {
-            await _bookInterface.DeleteBook(Id);
+            await _bookService.DeleteBook(Id);
             return Ok();
         }
     }
